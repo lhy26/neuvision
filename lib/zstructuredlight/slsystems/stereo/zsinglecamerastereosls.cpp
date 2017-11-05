@@ -20,20 +20,18 @@
 
 #include "zsinglecamerastereosls.h"
 
-#include "zcalibratedcamera.h"
-#include "zcalibratedcameraprovider.h"
-#include "zcameraacquisitionmanager.h"
-#include "zcameracalibrationprovider.h"
 #include "zdecodedpattern.h"
 #include "zprojectedpattern.h"
-
-#include <Z3DCameraAcquisition>
 
 namespace Z3D
 {
 
-ZSingleCameraStereoSLS::ZSingleCameraStereoSLS(QObject *parent)
-    : ZStereoSLS(parent)
+ZSingleCameraStereoSLS::ZSingleCameraStereoSLS(
+        ZCameraPtr camera,
+        ZMultiCameraCalibrationPtr stereoCalibration,
+        ZPatternProjectionPtr patternProjection,
+        QObject *parent)
+    : ZStereoSLS({ camera }, stereoCalibration, patternProjection, parent)
 {
 
 }
@@ -67,34 +65,6 @@ void ZSingleCameraStereoSLS::processPatterns()
 
     projectedPattern = nullptr;
     decodedPatterns.clear();
-}
-
-QString ZSingleCameraStereoSLS::id() const
-{
-    return QString("Projector+Camera");
-}
-
-QString ZSingleCameraStereoSLS::displayName() const
-{
-    return QString("Projector + Camera");
-}
-
-void ZSingleCameraStereoSLS::init(QSettings *settings)
-{
-    camera = CalibratedCameraProvider::getCalibratedCamera(settings);
-
-    settings->beginGroup("ProjectorCalibration");
-    {
-        projectorCalibration =  ZCameraCalibrationProvider::getCalibration(settings);
-    }
-    settings->endGroup();
-
-    setLeftCalibration(camera->calibration());
-    setRightCalibration(projectorCalibration);
-
-    Z3D::ZCameraList camerasVector;
-    camerasVector.push_back(camera->camera());
-    setAcquisitionManager(ZCameraAcquisitionManagerPtr(new ZCameraAcquisitionManager(camerasVector)));
 }
 
 void ZSingleCameraStereoSLS::onPatternProjected(ZProjectedPatternPtr pattern)

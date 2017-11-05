@@ -35,7 +35,7 @@ public:
 
     explicit ZDecodedPattern(cv::Mat decodedImage,
                              cv::Mat intensityImg,
-                             std::map<int, std::vector<cv::Vec2f> > fringePointsList);
+                             std::map<int, std::vector<cv::Vec2f> > fringePointsList = std::map<int, std::vector<cv::Vec2f> >());
 
     cv::Mat intensityImg() const;
 

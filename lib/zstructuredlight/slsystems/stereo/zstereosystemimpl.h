@@ -41,7 +41,7 @@ class ZStereoSystemImpl : public QObject
 public:
     friend struct ParallelFringeProcessingImpl;
 
-    explicit ZStereoSystemImpl(QObject *parent = nullptr);
+    explicit ZStereoSystemImpl(ZMultiCameraCalibrationPtr stereoCalibration, QObject *parent = nullptr);
     ~ZStereoSystemImpl();
 
     bool ready() const;
@@ -61,8 +61,11 @@ public slots:
             int maxPosibleCloudPoints,
             float maxValidDistanceThreshold);
 
-    void setLeftCameraCalibration(Z3D::ZCameraCalibrationPtr cameraCalibration);
-    void setRightCameraCalibration(Z3D::ZCameraCalibrationPtr cameraCalibration);
+    Z3D::ZSimplePointCloudPtr triangulate(const cv::Mat &colorImg,
+                                          const cv::Mat &leftDecodedImage,
+                                          const cv::Mat &rightDecodedImage);
+
+    void setCalibration(ZStereoCameraCalibrationPtr calibration);
 
 protected slots:
     void precomputeOptimizations();
@@ -72,7 +75,7 @@ protected slots:
     void setReady(bool arg);
 
 protected:
-    std::vector<Z3D::ZPinholeCameraCalibrationWeakPtr > mCal;
+    ZStereoCameraCalibrationPtr m_calibration;
 
     std::vector< std::vector<cv::Vec3d> > m_undistortedRays;
     //std::vector< std::vector<cv::Vec3d> > m_undistortedWorldRays;
