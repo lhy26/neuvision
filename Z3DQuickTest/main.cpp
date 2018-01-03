@@ -1,6 +1,12 @@
 #include "quickVtkViewer.hpp"
 
-#include <QApplication>
+#include <zapplication.h>
+
+#if defined(Q_OS_MACOS)
+#include "osxutils.h"
+#endif
+
+//#include <QApplication>
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 #include <QTimer>
@@ -57,23 +63,26 @@ VTK_MODULE_INIT(vtkInteractionStyle)
 
 int main(int argc, char *argv[])
 {
-	if(argc != 2) {
+/*
+    if (argc != 2) {
 		std::cout << "Usage: " << argv[0] << "  Filename(.ply)" << std::endl;
 		return EXIT_FAILURE;
 	}
 
 	std::string inputFilename = argv[1];
-
+*/
 
 
 
 
 
 	// before initializing QApplication, set the default surface format.
-	QSurfaceFormat::setDefaultFormat(QVTKOpenGLWidget::defaultFormat());
+    QSurfaceFormat format = QVTKOpenGLWidget::defaultFormat();
+    format.setSamples(0);
+    QSurfaceFormat::setDefaultFormat(format);
+//  QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 
-	QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
-	QGuiApplication app(argc, argv);
+    Z3D::ZApplication app(argc, argv);
 
 	qmlRegisterType<Viewer>("QuickVTK", 1, 0, "VtkViewer");
 
@@ -84,14 +93,19 @@ int main(int argc, char *argv[])
 		return -1;
 	}
 
-	auto rootObject = engine.rootObjects().at(0);
-	auto window = static_cast<QWindow*>(rootObject);
+    QObject *rootObject = engine.rootObjects().first();
+    QWindow *window = static_cast<QWindow*>(rootObject);
+
+#if defined(Q_OS_MACOS)
+//    osxHideTitleBar(window->winId());
+    osxTransparentTitleBar(window->winId());
+#endif
 
 	QList<Viewer*> vtkItems = window->findChildren<Viewer*>();
 
 	QTimer::singleShot(100, [=](){
 		// For demonstration: Add a cone to the scene of each Viewer
-		/*
+
 		vtkNew<vtkConeSource> polyDataSource;
 		polyDataSource->SetResolution(100);
 		vtkNew<vtkPolyDataMapper> mapper;
@@ -99,9 +113,9 @@ int main(int argc, char *argv[])
 		mapper->SetInputConnection(polyDataSource->GetOutputPort());
 		actor->SetMapper(mapper);
 		actor->GetProperty()->SetOpacity(0.5); // demonstrate support for translucent VTK objects
-*/
 
 
+/*
 		vtkSmartPointer<vtkPLYReader> reader = vtkSmartPointer<vtkPLYReader>::New();
 		reader->SetFileName( inputFilename.c_str() );
 		reader->Update();
@@ -124,7 +138,7 @@ int main(int argc, char *argv[])
 
 		vtkNew<vtkActor> actor;
 		actor->SetMapper(mapper);
-
+*/
 		for (auto *vtkItem : vtkItems) {
 			auto *renderWindow = vtkItem->GetRenderWindow();
 			auto *renderer = renderWindow->GetRenderers()->GetFirstRenderer();

@@ -59,10 +59,10 @@ auto FboRenderer::render() -> void
 {
 	qDebug() << Q_FUNC_INFO;
 
-	m_fboOffscreenWindow->PushState();
-	m_fboOffscreenWindow->OpenGLInitState();
+//	m_fboOffscreenWindow->PushState();
+//	m_fboOffscreenWindow->OpenGLInitState();
 	m_fboOffscreenWindow->InternalRender();
-	m_fboOffscreenWindow->PopState();
+//	m_fboOffscreenWindow->PopState();
 }
 
 auto FboRenderer::createFramebufferObject(const QSize &size) -> QOpenGLFramebufferObject*
@@ -81,11 +81,11 @@ auto FboRenderer::onMouseEvent(QMouseEvent* event) -> void
 {
 	qDebug() << Q_FUNC_INFO;
 
-	if(m_interactor == nullptr || event == nullptr) {
+    if (m_interactor == nullptr || event == nullptr) {
 		return;
 	}
 
-	if(!m_interactor->GetEnabled()) {
+    if (!m_interactor->GetEnabled()) {
 		return;
 	}
 
@@ -115,5 +115,5 @@ auto FboRenderer::onMouseEvent(QMouseEvent* event) -> void
 		}
 	}
 
-	m_interactor->InvokeEvent(command, event);
+    m_interactor->InvokeEvent(command, event);
 }

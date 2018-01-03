@@ -27,10 +27,10 @@ auto FboOffscreenWindow::New() -> FboOffscreenWindow*
 
 auto FboOffscreenWindow::OpenGLInitState() -> void
 {
-	qDebug() << Q_FUNC_INFO;
+    qDebug() << Q_FUNC_INFO;
 
 	Superclass::OpenGLInitState();
-
+/*
 	MakeCurrent();
 	initializeOpenGLFunctions();
 
@@ -39,27 +39,25 @@ auto FboOffscreenWindow::OpenGLInitState() -> void
 
 	glEnable(GL_BLEND);
 	glHint(GL_CLIP_VOLUME_CLIPPING_HINT_EXT, GL_FASTEST);
-	glDepthMask(GL_TRUE);
+    glDepthMask(GL_TRUE);*/
 }
 
 auto FboOffscreenWindow::Render() -> void
 {
 	qDebug() << Q_FUNC_INFO;
 
-	if (QtParentRenderer) {
-		QtParentRenderer->update();
-	}
+    if (QtParentRenderer) {
+        QtParentRenderer->update();
+    }
 }
 
 auto FboOffscreenWindow::InternalRender() -> void
 {
-	qDebug() << Q_FUNC_INFO;
+    qDebug() << Q_FUNC_INFO;
 
-	try {
-		Superclass::Render();
-	} catch (...) {
-		qWarning() << "exception in Superclass::Render()";
-	}
+    QMutexLocker lock(&mutex);
+
+    Superclass::Render();
 }
 
 auto FboOffscreenWindow::SetFramebufferObject(QOpenGLFramebufferObject *fbo) -> void

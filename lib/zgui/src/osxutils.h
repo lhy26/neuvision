@@ -19,6 +19,12 @@
 
 #pragma once
 
-void osxHideTitleBar(unsigned long long winid);
+#if defined(Q_OS_MACOS)
 
-void osxTransparentTitleBar(unsigned long long winid);
+#include "zgui_global.h"
+
+void Z3D_GUI_SHARED_EXPORT osxHideTitleBar(unsigned long long winid);
+
+void Z3D_GUI_SHARED_EXPORT osxTransparentTitleBar(unsigned long long winid);
+
+#endif

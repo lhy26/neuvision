@@ -22,4 +22,6 @@ public:
 protected:
 	FboOffscreenWindow();
 	~FboOffscreenWindow();
+
+    QMutex mutex;
 };

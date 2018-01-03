@@ -18,7 +18,7 @@ SOURCES += \
     zmainwindow.cpp \
     zwidget.cpp
 
-mac {
+macx {
     # Only include / compile these files on OS X
     OBJECTIVE_SOURCES += \
         osxutils.mm
